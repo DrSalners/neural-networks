@@ -1,0 +1,28 @@
+[project]
+name = "neural_networks"
+version = "0.1.0"
+description = "Repo for learning pytorch etc.,"
+authors = [
+    {name = "Tyler Salners"}
+]
+readme = "README.md"
+requires-python = "<3.12"
+dependencies = [
+    "urllib3 (<2)",
+    "numpy (>=2.3.2,<3.0.0)",
+    "torch (>=2.8.0,<3.0.0)",
+    "torchvision (>=0.23.0,<0.24.0)",
+    "torchaudio (>=2.8.0,<3.0.0)"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+urllib3 = "<1.26.0"
+
+[tool.poetry]
+name = "neural_networks"
+packages = [{include = "neural_networks"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
