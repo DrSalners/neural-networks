@@ -1,0 +1,18 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+
+# VS Code - ignore everything except settings.json
+.vscode/*
+!.vscode/settings.json
+
+# Poetry lock file (optional, if you want reproducibility, keep it)
+# poetry.lock
+
+# OS-specific files
+.DS_Store
+Thumbs.db
