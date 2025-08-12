@@ -1,4 +1,14 @@
 {
-  "python.defaultInterpreterPath": ".venv/bin/python",
-  "python.terminal.activateEnvironment": true
+    "python.testing.pytestArgs":[
+        "TOOLS"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.defaultInterpreterPath": ".venv/bin/python.exe",
+    "python.testing.pytestEnabled": true,
+  "apc.electron": {
+    "opacity": 0.9,
+    "transparent": true,
+    "backgroundColor": "#00000000",
+    "vibrancy": "ultra-dark"
+  }
 }

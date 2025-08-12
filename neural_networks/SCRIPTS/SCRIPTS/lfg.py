@@ -495,13 +495,16 @@ y=[[0] for i in range(num_samples)]
 X+=[np.random.normal(mean2,var,d).tolist() for i in range(num_samples)]
 y+=[[1] for i in range(num_samples)]
 
-X = torch.tensor(X, dtype=torch.float32).to(device)
-y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1).to(device)
+X = torch.tensor(X, dtype=torch.float32).to(device, non_blocking=True)
+y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1).to(device,non_blocking=True)
 
 dataset = torch.utils.data.TensorDataset(X, y)
 batch_size = int(num_samples/10)
 
-loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
+loader = torch.utils.data.DataLoader(dataset,
+                                     batch_size=batch_size,
+                                     shuffle=True,
+                                     )
 def leaky_relu(x, alpha=0.01):
     return x if x >= 0 else alpha * x
 #### MODEL DEFINITION #################
@@ -509,14 +512,14 @@ class NN(nn.Module):
     def __init__(self):
         super(NN, self).__init__()
         self.fc1=nn.Linear(d,h,bias=False)
-        # self.relu1=nn.LeakyReLU(0.01)
-        # self.fc2=nn.Linear(h,D,bias=False)
+        self.relu1=nn.LeakyReLU(0.01)
+        self.fc2=nn.Linear(h,D,bias=False)
         # self.softmax=nn.Softmax(dim=1) #this line is not neccesary when you use crossentropyloss
     
     def forward(self,input):
         output=self.fc1(input)
-        # output=self.relu1(output)
-        # output=self.fc2(output)
+        output=self.relu1(output)
+        output=self.fc2(output)
         # output=self.softmax(output) #this line is not neccesary when you use crossentropyloss
         return (output)
 ############################################################################################
@@ -573,14 +576,14 @@ class NN(nn.Module):
     def __init__(self):
         super(NN, self).__init__()
         self.fc1=nn.Linear(d,h,bias=False)
-        # self.relu1=nn.LeakyReLU(0.01)
-        # self.fc2=nn.Linear(h,D,bias=False)
+        self.relu1=nn.LeakyReLU(0.01)
+        self.fc2=nn.Linear(h,D,bias=False)
         # self.softmax=nn.Softmax(dim=1) #this line is not neccesary when you use crossentropyloss
     
     def forward(self,input):
         output=self.fc1(input)
-        # output=self.relu1(output)
-        # output=self.fc2(output)
+        output=self.relu1(output)
+        output=self.fc2(output)
         # output=self.softmax(output) #this line is not neccesary when you use crossentropyloss
         return (output)
 ############################################################################################
