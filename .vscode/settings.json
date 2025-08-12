@@ -5,7 +5,7 @@
     "python.testing.unittestEnabled": false,
     "python.defaultInterpreterPath": ".venv/bin/python.exe",
     "python.testing.pytestEnabled": true,
-  "apc.electron": {
+    "apc.electron": {
     "opacity": 0.9,
     "transparent": true,
     "backgroundColor": "#00000000",
