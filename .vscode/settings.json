@@ -6,7 +6,7 @@
     "python.defaultInterpreterPath": ".venv/bin/python.exe",
     "python.testing.pytestEnabled": true,
     "apc.electron": {
-    "opacity": 0.9,
+    "opacity": 0.8,
     "transparent": true,
     "backgroundColor": "#00000000",
     "vibrancy": "ultra-dark"

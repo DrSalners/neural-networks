@@ -482,12 +482,13 @@ start=time()
 d=3000
 D=2
 h=max(2,d-1)
-num_samples=500
+num_samples=5000
 mean1=0
 mean2=2
 var=1
 
-device = torch.device("mps")
+device = torch.device("cpu")
+torch.set_num_threads(10)
 
 X=[np.random.normal(mean1,var,d).tolist() for i in range(num_samples)]
 y=[[0] for i in range(num_samples)]
@@ -504,6 +505,7 @@ batch_size = int(num_samples/10)
 loader = torch.utils.data.DataLoader(dataset,
                                      batch_size=batch_size,
                                      shuffle=True,
+                                     num_workers=2,
                                      )
 def leaky_relu(x, alpha=0.01):
     return x if x >= 0 else alpha * x
@@ -536,6 +538,7 @@ weight_pdf_tracker=[]
 epochs=np.arange(1,1000,1)
 for epoch in epochs:
     for X_batch, y_batch in loader:
+        X_batch, y_batch = X_batch.to(device), y_batch.to(device)
         optimizer.zero_grad()
         y_pred = model(X_batch)
         loss = loss_fn(y_pred, y_batch.long().squeeze())
@@ -546,66 +549,29 @@ for epoch in epochs:
     weight_pdf_tracker.append(model.fc1.weight.clone().detach().flatten().cpu().numpy())
 print(time()-start)
 
+### test
 
-### avalanches? ############################################################################
-start=time()
-D=2
-h=max(2,d-1)
-mean1=0
-mean2=2
-var=1
+# print("CPU threads available:", torch.get_num_threads())
+# print("MPS available:", torch.backends.mps.is_available())
 
+# def create_torch_tensors(device):
+#     X=torch.rand((40000,40000),dtype=torch.float32)
+#     Y=torch.rand((40000,40000),dtype=torch.float32)
+#     X=X.to(device)
+#     Y=Y.to(device)
 
-X=[np.random.normal(mean1,var,d).tolist() for i in range(num_samples)]
-y=[[0] for i in range(num_samples)]
+#     return X, Y
 
-X+=[np.random.normal(mean2,var,d).tolist() for i in range(num_samples)]
-y+=[[1] for i in range(num_samples)]
+# device=torch.device('cpu')
+# x,y=create_torch_tensors(device)
 
-X = torch.tensor(X, dtype=torch.float32)
-y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1)
+# start=time()
+# x*y
+# print(time()-start)
 
-dataset = torch.utils.data.TensorDataset(X, y)
-batch_size = int(num_samples/10)
+# device=torch.device('mps')
+# x,y=create_torch_tensors(device)
 
-loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
-def leaky_relu(x, alpha=0.01):
-    return x if x >= 0 else alpha * x
-#### MODEL DEFINITION #################
-class NN(nn.Module):
-    def __init__(self):
-        super(NN, self).__init__()
-        self.fc1=nn.Linear(d,h,bias=False)
-        self.relu1=nn.LeakyReLU(0.01)
-        self.fc2=nn.Linear(h,D,bias=False)
-        # self.softmax=nn.Softmax(dim=1) #this line is not neccesary when you use crossentropyloss
-    
-    def forward(self,input):
-        output=self.fc1(input)
-        output=self.relu1(output)
-        output=self.fc2(output)
-        # output=self.softmax(output) #this line is not neccesary when you use crossentropyloss
-        return (output)
-############################################################################################
-model=NN()
-### TRAINING
-loss_fn = nn.CrossEntropyLoss()# binary cross entropy
-optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-model.train()
-
-loss_tracker=[]
-weight_pdf_tracker=[]
-
-epochs=np.arange(1,1000,1)
-for epoch in epochs:
-    for X_batch, y_batch in loader:
-        optimizer.zero_grad()
-        y_pred = model(X_batch)
-        loss = loss_fn(y_pred, y_batch.long().squeeze())
-        loss.backward()
-        optimizer.step()    
-        # print(f"Epoch {epoch+1}")
-    loss_tracker.append(loss.detach())
-    weight_pdf_tracker.append(model.fc1.weight.clone().detach().flatten().numpy())
-print(time()-start)
+# start=time()
+# x*y
+# print(time()-start)
