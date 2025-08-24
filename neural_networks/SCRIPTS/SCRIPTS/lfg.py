@@ -487,8 +487,8 @@ mean1=0
 mean2=2
 var=1
 
-device = torch.device("cpu")
-torch.set_num_threads(10)
+device = torch.device("mps")
+# torch.set_num_threads(10)
 
 X=[np.random.normal(mean1,var,d).tolist() for i in range(num_samples)]
 y=[[0] for i in range(num_samples)]
@@ -505,7 +505,6 @@ batch_size = int(num_samples/10)
 loader = torch.utils.data.DataLoader(dataset,
                                      batch_size=batch_size,
                                      shuffle=True,
-                                     num_workers=2,
                                      )
 def leaky_relu(x, alpha=0.01):
     return x if x >= 0 else alpha * x
